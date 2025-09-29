@@ -20,15 +20,14 @@ class AlienInvasion:
         self.settings.screen_width = self.screen.get_rect().width
         self.settings.screen_height = self.screen.get_rect().height
         pygame.display.set_caption("Alien Invasion")
-        #config manager
-        self.cfg = ConfigManager()
         #game statistics 
         self.stats = GameStats(self)
         #game score board
         self.sb = ScoreBoard(self)
         #game status
         self.game_active = False
-        
+        #config manager
+        self.cfg = ConfigManager()
         #create play button
         self.play_button = Button(self, "Play")
         #backgroud color
@@ -57,7 +56,7 @@ class AlienInvasion:
     def _check_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self._game_end()
+                sys.exit()
             elif event.type == pygame.KEYDOWN:
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
@@ -79,16 +78,7 @@ class AlienInvasion:
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
         elif event.key == pygame.K_q:
-            self._game_end()
-            
-    def _game_end(self):
-        #first check if it is necessary to update max high_score
-        current_high_score = round(self.stats.high_score, -1)
-        history_high_score = self.cfg.get("Player", "high_score")
-        if int(current_high_score) > int(history_high_score):
-            self.cfg.set("Player", "high_score", current_high_score)
-        #and then exit the game
-        sys.exit()
+            sys.exit()
 
     def _check_keyup_events(self, event):
         if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
@@ -106,8 +96,6 @@ class AlienInvasion:
             #reset 3 ships for restart game
             self.stats.reset_stats()
             self.sb.prep_score()
-            self.sb.prep_level()
-            self.sb.prep_ships()
             
             self.game_active = True
             #empty bullets and aliens
@@ -166,7 +154,6 @@ class AlienInvasion:
         if self.stats.ship_left > 0:
             
             self.stats.ship_left -= 1
-            self.sb.prep_ships()
             
             self.bullets.empty()
             self.aliens.empty()

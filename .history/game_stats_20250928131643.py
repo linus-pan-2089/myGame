@@ -4,7 +4,7 @@ class GameStats:
         self.cfg = ai_game.cfg
         self.reset_stats()
         #high score won't reset
-        self.high_score = int(self.cfg.get("Player", "high_score"))
+        self.high_score = self.cfg.get("Player", "high_score")
     
     def reset_stats(self):
         self.ship_left = self.settings.ship_limit - 1

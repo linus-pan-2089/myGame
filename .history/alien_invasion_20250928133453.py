@@ -20,15 +20,14 @@ class AlienInvasion:
         self.settings.screen_width = self.screen.get_rect().width
         self.settings.screen_height = self.screen.get_rect().height
         pygame.display.set_caption("Alien Invasion")
-        #config manager
-        self.cfg = ConfigManager()
         #game statistics 
         self.stats = GameStats(self)
         #game score board
         self.sb = ScoreBoard(self)
         #game status
         self.game_active = False
-        
+        #config manager
+        self.cfg = ConfigManager()
         #create play button
         self.play_button = Button(self, "Play")
         #backgroud color
@@ -85,7 +84,7 @@ class AlienInvasion:
         #first check if it is necessary to update max high_score
         current_high_score = round(self.stats.high_score, -1)
         history_high_score = self.cfg.get("Player", "high_score")
-        if int(current_high_score) > int(history_high_score):
+        if current_high_score > history_high_score:
             self.cfg.set("Player", "high_score", current_high_score)
         #and then exit the game
         sys.exit()

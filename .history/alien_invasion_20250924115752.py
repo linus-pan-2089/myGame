@@ -8,7 +8,6 @@ from game_stats import GameStats
 from time import sleep
 from button import Button
 from config_manager import ConfigManager
-from scoreboard import ScoreBoard
 
 class AlienInvasion:
     def __init__(self):
@@ -20,15 +19,12 @@ class AlienInvasion:
         self.settings.screen_width = self.screen.get_rect().width
         self.settings.screen_height = self.screen.get_rect().height
         pygame.display.set_caption("Alien Invasion")
-        #config manager
-        self.cfg = ConfigManager()
         #game statistics 
         self.stats = GameStats(self)
-        #game score board
-        self.sb = ScoreBoard(self)
         #game status
         self.game_active = False
-        
+        #config manager
+        self.cfg = ConfigManager()
         #create play button
         self.play_button = Button(self, "Play")
         #backgroud color
@@ -57,7 +53,7 @@ class AlienInvasion:
     def _check_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self._game_end()
+                sys.exit()
             elif event.type == pygame.KEYDOWN:
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
@@ -79,16 +75,7 @@ class AlienInvasion:
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
         elif event.key == pygame.K_q:
-            self._game_end()
-            
-    def _game_end(self):
-        #first check if it is necessary to update max high_score
-        current_high_score = round(self.stats.high_score, -1)
-        history_high_score = self.cfg.get("Player", "high_score")
-        if int(current_high_score) > int(history_high_score):
-            self.cfg.set("Player", "high_score", current_high_score)
-        #and then exit the game
-        sys.exit()
+            sys.exit()
 
     def _check_keyup_events(self, event):
         if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
@@ -105,9 +92,6 @@ class AlienInvasion:
         if button_clicked and not self.game_active:
             #reset 3 ships for restart game
             self.stats.reset_stats()
-            self.sb.prep_score()
-            self.sb.prep_level()
-            self.sb.prep_ships()
             
             self.game_active = True
             #empty bullets and aliens
@@ -120,9 +104,6 @@ class AlienInvasion:
             
             #hide mouse
             pygame.mouse.set_visible(False)
-            
-            #restore game speed settings
-            self.settings.initialize_dynamic_settings()
             
     def _fire_bullet(self):
         #create a bullet and add it to bullets group
@@ -145,28 +126,16 @@ class AlienInvasion:
     def _check_bullet_alien_collisions(self):
         #if bullets hit the alien, they both disappear
         collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
-        #update score setting
-        if collisions:
-            for aliens in collisions.values():
-                self.stats.score += self.settings.alien_points * len(aliens)
-            self.sb.prep_score()
-            self.sb.check_high_score()
         
         #if aliens are all destroyed, system destroys the rest bullets and create a new fleet 
         if not self.aliens:
             self.bullets.empty()
             self._create_fleet()
-            self.settings.increase_speed()
-            
-            #if the whole fleet are down, level increase by 1
-            self.stats.level += 1
-            self.sb.prep_level()
         
     def _ship_hit(self):
         if self.stats.ship_left > 0:
             
             self.stats.ship_left -= 1
-            self.sb.prep_ships()
             
             self.bullets.empty()
             self.aliens.empty()
@@ -244,8 +213,6 @@ class AlienInvasion:
             bullet.draw_bullet()
         self.ship.blitme()
         self.aliens.draw(self.screen)  
-        #show score board
-        self.sb.show_score()
         #if game in unactive status, show play button
         if not self.game_active:
             self.play_button.draw_button()

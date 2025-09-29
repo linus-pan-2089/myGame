@@ -6,7 +6,7 @@ class Settings:
         self.screen_height = 800
         self.bg_color = (230, 230, 230)
         #ship setting
-        self.ship_limit = 4
+        self.ship_limit = 3
         #settings for bullet
         self.bullet_width = 45
         self.bullet_height = 90

@@ -6,9 +6,9 @@ class Settings:
         self.screen_height = 800
         self.bg_color = (230, 230, 230)
         #ship setting
-        self.ship_limit = 4
+        self.ship_limit = 3
         #settings for bullet
-        self.bullet_width = 45
+        self.bullet_width = 300
         self.bullet_height = 90
         self.bullet_color = (60, 60, 60)
         self.bullets_allowed = 5
@@ -24,7 +24,6 @@ class Settings:
         
         #score setting
         self.alien_points = 50
-        self.score_scale = 1.5
         
     def initialize_dynamic_settings(self):
         #the following settings will change when game continue
@@ -38,5 +37,4 @@ class Settings:
         self.ship_speed *= self.speedup_scale
         self.bullet_speed *= self.speedup_scale
         self.alien_speed *= self.speedup_scale
-        self.alien_points = int(self.alien_points * self.score_scale)
-        #print(self.alien_points)
+        

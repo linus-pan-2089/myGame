@@ -1,8 +1,6 @@
 import pygame
-from pygame.sprite import Sprite
-class Ship(Sprite):
+class Ship:
     def __init__(self, ai_game):
-        super().__init__()
         self.screen = ai_game.screen
         self.screen_rect = ai_game.screen.get_rect()
         

@@ -85,7 +85,7 @@ class AlienInvasion:
         #first check if it is necessary to update max high_score
         current_high_score = round(self.stats.high_score, -1)
         history_high_score = self.cfg.get("Player", "high_score")
-        if int(current_high_score) > int(history_high_score):
+        if current_high_score > history_high_score:
             self.cfg.set("Player", "high_score", current_high_score)
         #and then exit the game
         sys.exit()
